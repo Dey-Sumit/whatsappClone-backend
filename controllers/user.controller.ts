@@ -17,6 +17,13 @@ export const deleteUser = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Get all users
+// @route GET /api/users/
+
+export const getAllUsers = asyncHandler(async (req, res) => {
+  const users = await UserModel.find({});
+  res.json(users);
+});
 //@desc Get user by id
 //@route GET /api/v1/users/:id
 //@access Private/Admin
@@ -24,9 +31,27 @@ export const deleteUser = asyncHandler(async (req, res) => {
 export const getUserById = asyncHandler(async (req, res) => {
   const user = await UserModel.findById(req.params.id);
   if (user) {
-    res.json(extractUser(user));
+    return res.json(extractUser(user));
   } else {
     res.status(404);
     throw new Error("User not found");
   }
+});
+//@desc Get search user by username
+//@route GET /api/query?q=""
+
+export const searchUserByUsername = asyncHandler(async (req, res, next) => {
+  const q = req.query.q?.toString();
+  if (!q) {
+    return res.status(404).json({ message: "please pass the keyword" });
+  }
+
+  //! needs upgrade to sort relevant results, use elastic search
+  const users = await UserModel.find({
+    username: {
+      $regex: q,
+      $options: "i",
+    },
+  });
+  res.status(200).json(users);
 });

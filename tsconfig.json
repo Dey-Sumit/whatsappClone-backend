@@ -12,7 +12,8 @@
       "@models/*": ["./models/*"],
       "@middlewares/*": ["./middlewares/*"],
       "@services/*": ["./services/*"],
-      "@routes/*": ["./routes/*"]
+      "@routes/*": ["./routes/*"],
+      "@config/*": ["./config/*"]
     }
   }
 }

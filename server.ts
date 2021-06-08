@@ -1,9 +1,15 @@
-import express, { NextFunction, Request, Response } from "express";
+import express from "express";
 import dotenv from "dotenv";
-import { notFound, errorHandler } from "@middlewares/error.middleware";
+import cors from "cors";
 import morgan from "morgan";
+import helmet from "helmet";
+
+import { notFound, errorHandler } from "@middlewares/error.middleware";
 import authRoutes from "@routes/auth.routes";
-import connectDB from "config/connetDB";
+import userRoutes from "@routes/user.routes";
+import connectDB from "@config/connectDB";
+import passport from "@middlewares/passport.middleware";
+import sessionMiddleware from "@middlewares/session.middleware";
 
 dotenv.config();
 
@@ -12,10 +18,34 @@ const PORT = process.env.PORT || 4000;
 const app = express();
 
 app.use(morgan("dev"));
+app.use(helmet());
+
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/auth", authRoutes);
+app.use(sessionMiddleware);
+app.use(passport.initialize());
+app.use(passport.session());
+// app.use((req, res, next) => {
+//   console.log("-------- ");
+
+//   console.log(req.session);
+//   console.log(req.sessionID);
+//   console.log(req.user);
+
+//   console.log("-------- ");
+
+//   next();
+// });
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

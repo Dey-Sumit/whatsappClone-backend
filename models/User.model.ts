@@ -42,14 +42,14 @@ const UserSchema = new Schema<any>(
 );
 
 // methods
-UserSchema.methods.matchPassword = async function (
-  this,
-  enteredPassword: string
-) {
-  console.log({ enteredPassword }, this.password);
+// UserSchema.methods.matchPassword = async function (
+//   this,
+//   enteredPassword: string
+// ) {
+//   console.log({ enteredPassword }, this.password);
 
-  return await bcrypt.compare(enteredPassword, this.password);
-};
+//   return await bcrypt.compare(enteredPassword, this.password);
+// };
 
 // middleware before saving the data
 // hash the password during registration
