@@ -4,9 +4,9 @@ const Schema = mongoose.Schema;
 
 const messageSchema = new Schema(
   {
-    sender: { type: Schema.Types.ObjectId, ref: "User" },
+    sender: { type: Schema.Types.ObjectId, ref: "User", required: true },
     content: { type: String, trim: true },
-    chat: { type: Schema.Types.ObjectId, ref: "Chat" },
+    chat: { type: Schema.Types.ObjectId, ref: "Chat", required: true },
     media: {
       //URL
       type: String,

@@ -7,6 +7,7 @@ import helmet from "helmet";
 import { notFound, errorHandler } from "@middlewares/error.middleware";
 import authRoutes from "@routes/auth.routes";
 import userRoutes from "@routes/user.routes";
+import chatRoutes from "@routes/chat.routes";
 import connectDB from "@config/connectDB";
 import passport from "@middlewares/passport.middleware";
 import sessionMiddleware from "@middlewares/session.middleware";
@@ -46,6 +47,7 @@ app.use(passport.session());
 // });
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/chats", chatRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

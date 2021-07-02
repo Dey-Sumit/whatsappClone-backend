@@ -1,5 +1,6 @@
 import extractUser from "@libs/extractUser";
 import UserModel from "@models/User.model";
+import { Request } from "express";
 
 import asyncHandler from "express-async-handler";
 
@@ -24,6 +25,7 @@ export const getAllUsers = asyncHandler(async (req, res) => {
   const users = await UserModel.find({});
   res.json(users);
 });
+
 //@desc Get user by id
 //@route GET /api/v1/users/:id
 //@access Private/Admin
@@ -37,6 +39,7 @@ export const getUserById = asyncHandler(async (req, res) => {
     throw new Error("User not found");
   }
 });
+
 //@desc Get search user by username
 //@route GET /api/query?q=""
 
@@ -54,4 +57,16 @@ export const searchUserByUsername = asyncHandler(async (req, res, next) => {
     },
   });
   res.status(200).json(users);
+});
+
+//@ desc Get Chats by id
+//@ route GET /api/v1/user/
+//@ access Private/Admin
+
+export const getChatsByUserId = asyncHandler(async (req, res) => {
+  const chats = await UserModel.findById(req.params.id).populate("Chat");
+  // TODO handle error
+  if (chats) {
+    return res.json(chats);
+  }
 });
