@@ -1,6 +1,6 @@
 import extractUser from "@libs/extractUser";
 import UserModel from "@models/User.model";
-import { Request } from "express";
+import { getChatsByUserIdService } from "@services/user.service";
 
 import asyncHandler from "express-async-handler";
 
@@ -64,9 +64,9 @@ export const searchUserByUsername = asyncHandler(async (req, res, next) => {
 //@ access Private/Admin
 
 export const getChatsByUserId = asyncHandler(async (req, res) => {
-  const chats = await UserModel.findById(req.params.id).populate("Chat");
-  // TODO handle error
+  const chats = await getChatsByUserIdService(req.params.id);
+
   if (chats) {
     return res.json(chats);
-  }
+     }
 });

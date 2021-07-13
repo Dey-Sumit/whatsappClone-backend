@@ -27,7 +27,7 @@ export interface Chat {
 }
 export interface Message {
   sender: User;
-  content?: string;
+  text?: string;
   chat?: Chat;
   media?: string;
 }

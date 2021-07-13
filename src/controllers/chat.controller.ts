@@ -1,11 +1,13 @@
 import ChatModel from "@models/Chat.model";
 import MessageModel from "@models/Message.model";
+import UserModel from "@models/User.model";
 import asyncHandler from "express-async-handler";
 
 //@ desc Get all Chats
 //@ route GET /api/chats/
 
 export const getAllChats = asyncHandler(async (req, res) => {
+  //TODO get only chats where user is a part, only return  { latestMessage, chatName, groupIcon } these data
   const chats = await ChatModel.find({});
   res.json(chats);
 });
@@ -15,7 +17,15 @@ export const getAllChats = asyncHandler(async (req, res) => {
 //@ access Private/Admin
 
 export const getChatById = asyncHandler(async (req, res) => {
-  const chat = await ChatModel.findById(req.params.id);
+  const chat = await ChatModel.findById(req.params.id)
+    .populate({
+      path: "messages",
+      populate: {
+        path: "sender",
+      },
+    })
+    .populate("adminUsers")
+    .populate("normalUsers");
   if (chat) {
     return res.json(chat);
   } else {
@@ -43,6 +53,9 @@ export const createChat = asyncHandler(async (req, res) => {
   //! 1. extract the data
   const { users, createdBy, isGroupChat, message, chatName, medias } = req.body;
 
+  // 60ea7ffea8810838600dedaf auser
+  // 60ea8245f69a9e39e8a8a5cc buser
+
   //! 2. validate the data
 
   //! prepare the data
@@ -58,7 +71,18 @@ export const createChat = asyncHandler(async (req, res) => {
     createdBy,
   });
 
-  //! 4. add message
+  //TODO add chat for every user
+  const usersId = [...normalUsers, ...adminUsers];
+
+  usersId.map(async (uid: string) => {
+    await UserModel.findByIdAndUpdate(uid, {
+      $addToSet: {
+        chats: chat._id,
+      },
+    });
+  });
+
+  //!TODO 4. add message
 
   //! 5. save the data
 
@@ -82,12 +106,11 @@ export const addMessage = asyncHandler(async (req, res) => {
   chatId,
 } */
 
-  const { content, sender, media, chatId } = req.body;
+  const { text, sender, media, chatId } = req.body;
 
   //! validate
 
-  if (!content && !media)
-    return res.status(400).json({ message: "validation failed" });
+  if (!text && !media) return res.status(400).json({ message: "validation failed" });
   //! check if chatId exist or nor
 
   // const chat = await ChatModel.findById(chatId);
@@ -97,7 +120,7 @@ export const addMessage = asyncHandler(async (req, res) => {
 
   //! create Message object
   const message = await MessageModel.create({
-    content,
+    text,
     sender,
     chat: chatId,
   });
@@ -107,8 +130,22 @@ export const addMessage = asyncHandler(async (req, res) => {
     chatId,
     {
       $push: { messages: message._id },
+      latestMessage: message._id,
     },
     { new: true }
-  );
+  )
+    .populate("messages")
+    .populate("latestMessage")
+    .populate("adminUsers")
+    .sort("latestMessage.createdAt");
+
   return res.status(200).json(chat);
 });
+
+// export const addUnreadMessage = asyncHandler(async (req, res) => {
+
+
+  
+
+//   return res.status(200).json(chat);
+// });

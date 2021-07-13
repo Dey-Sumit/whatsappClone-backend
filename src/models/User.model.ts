@@ -29,6 +29,7 @@ const UserSchema = new Schema<any>(
         ref: "Chat",
       },
     ],
+   
   },
   {
     timestamps: true,
@@ -67,3 +68,9 @@ interface UserDoc extends User, Document {
 }
 
 export default mongoose.model<UserDoc>("User", UserSchema);
+
+// unseenMessages: {
+//   chatId1 : [messageId,messageId,messageId,messageId ] / 3,
+//   chatId2 : [messageId,messageId,messageId,messageId ] / 2,
+//   chatId3 : [messageId,messageId,messageId,messageId ],
+// }

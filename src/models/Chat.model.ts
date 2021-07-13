@@ -5,15 +5,21 @@ const chatSchema = new Schema(
   {
     chatName: { type: String, trim: true }, // if no chatName ,it means it's a personal chat
     description: { type: String, trim: true },
-    GroupIcon: {
+
+    groupIcon: {
       type: String,
       default:
         "https://buildyourspechere.com/wp-content/uploads/2020/10/placeholder-image-person-jpg.jpg",
     },
+
     isGroupChat: { type: Boolean, default: false },
+
     normalUsers: [{ type: Schema.Types.ObjectId, ref: "User" }], // admins will not be included here
+
     adminUsers: [{ type: Schema.Types.ObjectId, ref: "User" }],
+
     messages: [{ type: Schema.Types.ObjectId, ref: "Message" }],
+
     latestMessage: { type: Schema.Types.ObjectId, ref: "Message" },
 
     createdBy: {
@@ -21,9 +27,9 @@ const chatSchema = new Schema(
       ref: "User",
       required: true,
     },
+
     medias: [
       {
-        //URL(s)
         type: String,
       },
     ],

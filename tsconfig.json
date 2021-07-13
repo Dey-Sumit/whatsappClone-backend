@@ -6,14 +6,15 @@
     "outDir": "./build",
     "esModuleInterop": true,
     "strict": true,
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "paths": {
       "@libs/*": ["./libs/*"],
       "@models/*": ["./models/*"],
       "@middlewares/*": ["./middlewares/*"],
       "@services/*": ["./services/*"],
       "@routes/*": ["./routes/*"],
-      "@config/*": ["./config/*"]
+      "@config/*": ["./config/*"],
+      "@utils/*": ["./utils/*"]
     }
   }
 }
