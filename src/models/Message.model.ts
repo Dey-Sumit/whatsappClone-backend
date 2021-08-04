@@ -8,13 +8,43 @@ const messageSchema = new Schema(
     text: { type: String, trim: true },
     chat: { type: Schema.Types.ObjectId, ref: "Chat", required: true },
     media: {
-      //URL
+      type: String, //URL
+    },
+    mediaType: {
       type: String,
     },
-    seenBy: [{ type: Schema.Types.ObjectId, ref: "User" }], //?
+    receivers: [
+      {
+        _id: false,
+        userId: {
+          type: Schema.Types.ObjectId, 
+          ref: "User",
+          required: true,
+        },
+        status: {
+          type: String,
+          enum: ["sent", "delivered", "seen"],
+        },
+      },
+    ],
+    noOfSeen: Number,
+    noIfDelivered: Number,
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toObject: {
+      virtuals: true,
+    },
+    toJSON: {
+      virtuals: true,
+    },
+  }
 );
+
+// Person.pre('remove', function(next) {
+//   // Remove all the assignment docs that reference the removed person.
+//   this.model('Assignment').remove({ person: this._id }, next);
+// });
 
 export default mongoose.model<Message & Document>("Message", messageSchema);
 

@@ -11,23 +11,28 @@ export interface User {
   bio?: string;
   profilePicture?: string;
   password: string;
-  chats?: [];
+  chats?: Chat[];
 }
 export interface Chat {
   chatName: string;
   description?: string;
   groupIcon?: string;
   isGroupChat: boolean;
-  normalUsers?: User[];
+  users?: User[];
   adminUsers: User[];
   messages?: Message[];
   latestMessage?: Message;
   createdBy: User;
   medias?: string[];
+  _id?: string;
 }
 export interface Message {
   sender: User;
   text?: string;
   chat?: Chat;
   media?: string;
+  receivers: {
+    userId: string;
+    status: string;
+  }[];
 }

@@ -63,6 +63,9 @@ UserSchema.pre("save", async function (this, next: Function) {
   this.password = await bcrypt.hash(this.password, salt);
 });
 
+
+
+
 interface UserDoc extends User, Document {
   matchPassword: (candidatePassword: string) => Promise<boolean>;
 }

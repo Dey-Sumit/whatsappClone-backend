@@ -2,6 +2,8 @@ import MessageModel from "@models/Message.model";
 
 //TODO do "file adding" later
 
+
+// TODO add conditional types 👇
 interface message {
   sender: string;
   chatId: string;
@@ -14,5 +16,6 @@ export const createMessage = async ({ sender, chatId, file, text }: message) => 
     text,
     sender,
     chat: chatId,
+
   });
 };

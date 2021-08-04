@@ -68,5 +68,5 @@ export const getChatsByUserId = asyncHandler(async (req, res) => {
 
   if (chats) {
     return res.json(chats);
-     }
+  }
 });

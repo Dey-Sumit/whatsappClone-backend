@@ -1,7 +1,8 @@
-import { User as IUser } from "../libs/types";
+import { Chat, User as IUser } from "../libs/types";
 import User from "@models/User.model";
 import { Error } from "mongoose";
 import UserModel from "@models/User.model";
+import ChatModel from "@models/Chat.model";
 
 export async function createUser(data: IUser) {
   try {
@@ -12,14 +13,15 @@ export async function createUser(data: IUser) {
   }
 }
 
-export const getChatsByUserIdService = async (userId:string) => {
-  return await UserModel.findById(userId, "chats").populate({
-    path: "chats",
-    select: "groupIcon latestMessage chatName",
-    populate: {
-      path: "latestMessage",
-    },
-    options: { sort: { updatedAt: -1 } },
-  })
-}
-
+export const getChatsByUserIdService = async (userId: string) => {
+  return (
+    await UserModel.findById(userId, "chats").populate({
+      path: "chats",
+      select: "groupIcon latestMessage chatName",
+      populate: {
+        path: "latestMessage",
+      },
+      options: { sort: { updatedAt: -1 } },
+    })
+  )?.chats;
+};
